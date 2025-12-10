@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}SkillGap - Close Your Skill Gap{% endblock %}
+
+{% block content %}
+<div class="hero-section text-white text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-4">
+            <span class="text-gradient">Close Your Skill Gap</span>
+        </h1>
+        <p class="lead mb-5">Master in-demand skills with personalized learning paths</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg px-5 py-3">Get Started Free</a>
+            <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg px-5 py-3">Learn More</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

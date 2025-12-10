@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}Your Result{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+  <div class="text-center reveal">
+    <h1 class="display-3 text-gradient">Your Score: {{ score }}/100</h1>
+    <div class="mt-4">
+      <canvas id="resultChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-6 reveal">
+      <div class="card border-danger shadow-lg">
+        <div class="card-header bg-danger text-white">
+          <h5>Missing Skills</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            {% for skill in missing %}
+            <li class="list-group-item">{{ skill }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 reveal">
+      <div class="card border-success shadow-lg">
+        <div class="card-header bg-success text-white">
+          <h5>Recommended Courses</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            {% for course in recommended %}
+            <li class="list-group-item">{{ course }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+  new Chart(document.getElementById('resultChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Your Score', 'Remaining'],
+      datasets: [{
+        data: [{{ score }}, {{ 100 - score }}],
+        backgroundColor: ['#10b981', '#ef4444']
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Sign Up - SkillGap{% endblock %}
+
+{% block content %}
+<div class="auth-card reveal">
+    <div class="text-center mb-5">
+        <h2 class="mb-3"><span class="text-gradient">Join SkillGap</span></h2>
+        <p class="text-muted fs-5">Create your account and start mastering skills today!</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('signup') }}">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Username</label>
+                <input type="text" name="username" class="form-control form-control-lg" placeholder="Choose username" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="email" class="form-control form-control-lg" placeholder="you@example.com" required>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" name="password" class="form-control form-control-lg" placeholder="Min 6 characters" minlength="6" required>
+        </div>
+
+        <div class="mt-4 mb-5">
+            <label class="form-label fw-semibold">Confirm Password</label>
+            <input type="password" name="confirm" class="form-control form-control-lg" placeholder="Type again" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold">Create Free Account</button>
+    </form>
+
+    <div class="text-center mt-4">
+        <p class="mb-0 text-muted">Already have an account? <a href="{{ url_for('login') }}" class="text-primary fw-bold">Login here</a></p>
+    </div>
+</div>
+{% endblock %}

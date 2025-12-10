@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+  <h1 class="text-gradient text-center mb-5">Admin Dashboard</h1>
+  <div class="row mb-4 reveal">
+    <div class="col-md-6">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5>Total Users</h5>
+          <h2>{{ total_users }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5>Total Assessments</h5>
+          <h2>{{ total_results }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="mt-5">All Users</h3>
+  <div class="table-responsive reveal">
+    <table class="table table-bordered">
+      <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>{{ u.username }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role }}</td>
+          <td>
+            {% if u.id != session.user_id %}
+            <a href="/admin/delete_user/{{ u.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete user?')">Delete</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

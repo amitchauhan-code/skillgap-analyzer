@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Recommended Courses - SkillGap{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center display-4 mb-5 text-gradient">Recommended For You</h1>
+    <div class="row g-4">
+        {% for course in courses %}
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-lg border-0 rounded-4 hover-card">
+                <div class="card-body p-4">
+                    <h4 class="text-primary">{{ course.title }}</h4>
+                    <p class="text-success fw-bold">{{ course.platform }} • {{ course.price }}</p>
+                    <a href="{{ course.link }}" target="_blank" class="btn btn-outline-primary w-100">
+                        Enroll Now → 
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-5">
+        <a href="/dashboard" class="btn btn-secondary btn-lg">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

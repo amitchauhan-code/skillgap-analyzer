@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+{% block title %}Web Development Quiz - SkillGap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary mb-3">Web Development Quiz</h1>
+        <p class="lead">10 Questions • 10 Points Each • No Negative Marking</p>
+        <div class="progress mt-4" style="height: 25px;">
+            <div class="progress-bar bg-primary" id="progressBar" style="width: 0%">0%</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <form id="quizForm">
+                <div id="questionsContainer">
+                    <!-- Questions JavaScript se load honge -->
+                </div>
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Submit Quiz</button>
+                </div>
+            </form>
+
+            <!-- Result Modal -->
+            <div class="modal fade" id="resultModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content glass">
+                        <div class="modal-header border-0">
+                            <h2 class="modal-title text-gradient">Your Result</h2>
+                        </div>
+                        <div class="modal-body text-center py-5">
+                            <h1 id="scoreDisplay" class="display-1 text-primary">0/100</h1>
+                            <p class="lead" id="message"></p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <a href="/dashboard" class="btn btn-primary btn-lg">Back to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Real Quiz Questions (Web Dev)
+const questions = [
+    { q: "HTML stands for?", options: ["Hyper Text Markup Language", "High Text Markup Language", "Hyper Tabular Markup Language", "None"], ans: 0 },
+    { q: "Which is NOT a JavaScript framework?", options: ["React", "Angular", "Vue", "Laravel"], ans: 3 },
+    { q: "CSS stands for?", options: ["Color Style Sheets", "Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets"], ans: 1 },
+    { q: "Bootstrap is a ___ framework", options: ["JS", "CSS", "Python", "PHP"], ans: 1 },
+    { q: "Which tag is used for largest heading?", options: ["<h1>", "<h6>", "<head>", "<heading>"], ans: 0 },
+    { q: "Python web framework?", options: ["Django", "Laravel", "Spring", "Rails"], ans: 0 },
+    { q: "LocalStorage saves data as?", options: ["String", "Number", "Object", "Array"], ans: 0 },
+    { q: "API stands for?", options: ["Application Programming Interface", "Advanced Programming Interface", "Application Protocol Interface", "None"], ans: 0 },
+    { q: "Git command to save changes?", options: ["git add", "git commit", "git push", "All of above"], ans: 3 },
+    { q: "Flexbox is part of?", options: ["HTML", "CSS", "JavaScript", "Python"], ans: 1 }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (current >= questions.length) {
+        document.getElementById("quizForm").innerHTML = "<h3 class='text-center'>Quiz Completed! Calculating result...</h3>";
+        setTimeout(showResult, 1500);
+        return;
+    }
+
+    const q = questions[current];
+    const progress = ((current + 1) / questions.length) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+    document.getElementById("progressBar").textContent = Math.round(progress) + "%";
+
+    const questionHTML = `
+        <div class="card mb-4 shadow-lg border-0">
+            <div class="card-body p-5">
+                <h4 class="mb-4"><strong>Question ${current + 1}:</strong> ${q.q}</h4>
+                ${q.options.map((opt, i) => `
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="q${current}" value="${i}" id="opt${i}" required>
+                        <label class="form-check-label fs-5" for="opt${i}">${opt}</label>
+                    </div>
+                `).join('')}
+                <div class="text-end mt-4">
+                    <button type="button" class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById("questionsContainer").innerHTML = questionHTML;
+}
+
+function nextQuestion() {
+    const selected = document.querySelector(`input[name="q${current}"]:checked`);
+    if (!selected) {
+        alert("Please select an answer!");
+        return;
+    }
+    if (parseInt(selected.value) === questions[current].ans) {
+        score += 10;
+    }
+    current++;
+    loadQuestion();
+}
+
+function showResult() {
+    const percentage = score;
+    let msg = "";
+    if (percentage >= 80) msg = "Outstanding! You're a Web Dev Pro!";
+    else if (percentage >= 60) msg = "Great job! Keep practicing!";
+    else if (percentage >= 40) msg = "Not bad! You can improve!";
+    else msg = "Keep learning! You got this!";
+
+    document.getElementById("scoreDisplay").textContent = percentage + "/100";
+    document.getElementById("message").textContent = msg;
+    new bootstrap.Modal(document.getElementById("resultModal")).show();
+}
+
+// Start Quiz
+loadQuestion();
+</script>
+{% endblock %}

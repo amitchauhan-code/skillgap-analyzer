@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block title %}Data Science Quiz - SkillGap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-success mb-3">Data Science Quiz</h1>
+        <p class="lead">10 Questions • 10 Points Each • No Negative Marking</p>
+        <div class="progress mt-4" style="height: 25px;">
+            <div class="progress-bar bg-success" id="progressBar" style="width: 0%">0%</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div id="questionsContainer"></div>
+            <div class="text-center mt-5">
+                <button type="button" class="btn btn-success btn-lg px-5" onclick="nextQuestion()" id="nextBtn">Next →</button>
+            </div>
+
+            <!-- Result Modal -->
+            <div class="modal fade" id="resultModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content glass">
+                        <div class="modal-header border-0">
+                            <h2 class="modal-title text-gradient">Your Score</h2>
+                        </div>
+                        <div class="modal-body text-center py-5">
+                            <h1 id="scoreDisplay" class="display-1 text-success">0/100</h1>
+                            <p class="lead fs-4" id="message"></p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <a href="/dashboard" class="btn btn-success btn-lg">Back to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { q: "Which library is used for data manipulation in Python?", options: ["NumPy", "Pandas", "Matplotlib", "Seaborn"], ans: 1 },
+    { q: "What does SQL stand for?", options: ["Structured Query Language", "Simple Query Language", "Standard Query Language", "None"], ans: 0 },
+    { q: "Pandas DataFrame is similar to?", options: ["Excel Sheet", "List", "Dictionary", "Array"], ans: 0 },
+    { q: "Which is NOT a supervised learning algorithm?", options: ["Linear Regression", "K-Means", "Decision Tree", "Random Forest"], ans: 1 },
+    { q: "Matplotlib is used for?", options: ["Data Cleaning", "Visualization", "Machine Learning", "Web Scraping"], ans: 1 },
+    { q: "scikit-learn is for?", options: ["ML Models", "Deep Learning", "Web Dev", "Database"], ans: 0 },
+    { q: "Overfitting means?", options: ["Model performs well on training but bad on test", "Model is too simple", "Too less data", "None"], ans: 0 },
+    { q: "Which is a NoSQL database?", options: ["MySQL", "PostgreSQL", "MongoDB", "SQLite"], ans: 2 },
+    { q: "Jupyter Notebook runs on?", options: ["Browser", "Terminal", "VS Code", "All"], ans: 3 },
+    { q: "Best tool for Big Data?", options: ["Excel", "Python", "Spark", "Tableau"], ans: 2 }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (current >= questions.length) {
+        showResult();
+        return;
+    }
+
+    const q = questions[current];
+    const progress = ((current + 1) / questions.length) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+    document.getElementById("progressBar").textContent = Math.round(progress) + "%";
+
+    document.getElementById("questionsContainer").innerHTML = `
+        <div class="card shadow-lg border-0 mb-4">
+            <div class="card-body p-5">
+                <h4 class="mb-4"><strong>Q${current + 1}:</strong> ${q.q}</h4>
+                ${q.options.map((opt, i) => `
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="q" value="${i}" id="opt${i}">
+                        <label class="form-check-label fs-5" for="opt${i}">${opt}</label>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    document.getElementById("nextBtn").textContent = current === questions.length - 1 ? "Submit Quiz" : "Next →";
+}
+
+function nextQuestion() {
+    const selected = document.querySelector('input[name="q"]:checked');
+    if (!selected) {
+        alert("Bhai option choose kar!");
+        return;
+    }
+    if (parseInt(selected.value) === questions[current].ans) score += 10;
+    current++;
+    loadQuestion();
+}
+
+function showResult() {
+    let msg = score >= 80 ? "Data Scientist banne ke liye ready ho!" : 
+              score >= 60 ? "Bahut achha! Thoda aur practice karo" : 
+              "Shuruat achhi hai – continue karo!";
+    
+    document.getElementById("scoreDisplay").textContent = score + "/100";
+    document.getElementById("message").textContent = msg;
+    new bootstrap.Modal(document.getElementById("resultModal")).show();
+}
+
+loadQuestion();
+</script>
+{% endblock %}

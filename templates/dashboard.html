@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard - SkillGap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Welcome back, <span class="text-gradient">{{ username }}</span>!</h1>
+        <p class="lead text-muted">Ready to level up your skills?</p>
+    </div>
+
+    <div class="row g-4 mb-5 justify-content-center">
+        <div class="col-md-5">
+            <a href="/evaluate" class="text-decoration-none">
+                <button class="btn btn-primary btn-lg w-100 py-4 shadow-lg rounded-4">
+                    <h4 class="mb-0">Take Assessment</h4>
+                    <small>Find your current skill level</small>
+                </button>
+            </a>
+        </div>
+        <div class="col-md-5">
+            <a href="/analysis" class="text-decoration-none">
+                <button class="btn btn-info text-white btn-lg w-100 py-4 shadow-lg rounded-4">
+                    <h4 class="mb-0">View Skill Analysis</h4>
+                    <small>See your strong & weak areas</small>
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card h-100 shadow border-0 rounded-4">
+                <div class="card-body text-center p-5">
+                    <h1 class="display-1 text-warning">Trophy</h1>
+                    <h4>Your Progress</h4>
+                    <p class="text-muted">Keep improving every day!</p>
+                    <a href="/analysis" class="btn btn-outline-warning">View Details →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card h-100 shadow border-0 rounded-4">
+                <div class="card-body text-center p-5">
+                    <h1 class="display-1 text-success">Brain</h1>
+                    <h4>Skill Analysis</h4>
+                    <p class="text-muted">Get personalized insights</p>
+                    <a href="/analysis" class="btn btn-outline-success">Analyze Now →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card h-100 shadow border-0 rounded-4">
+                <div class="card-body text-center p-5">
+                    <h1 class="display-1 text-primary">GraduationCap</h1>
+                    <h4>Recommended Courses</h4>
+                    <p class="text-muted">Learn what matters most</p>
+                    <a href="/courses" class="btn btn-outline-primary">View Courses →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

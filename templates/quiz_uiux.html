@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block title %}UI/UX Design Quiz - SkillGap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-warning mb-3">UI/UX Design Quiz</h1>
+        <p class="lead">10 Questions • Test Your Design Thinking</p>
+        <div class="progress mt-4" style="height: 25px;">
+            <div class="progress-bar bg-warning" id="progressBar" style="width: 0%">0%</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div id="questionsContainer"></div>
+            <div class="text-center mt-5">
+                <button type="button" class="btn btn-warning btn-lg px-5 text-dark" onclick="nextQuestion()" id="nextBtn">Next →</button>
+            </div>
+
+            <div class="modal fade" id="resultModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content glass">
+                        <div class="modal-header border-0">
+                            <h2 class="modal-title text-gradient">Design Score</h2>
+                        </div>
+                        <div class="modal-body text-center py-5">
+                            <h1 id="scoreDisplay" class="display-1 text-warning">0/100</h1>
+                            <p class="lead fs-4" id="message"></p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <a href="/dashboard" class="btn btn-warning btn-lg text-dark">Back to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { q: "Best tool for UI/UX prototyping?", options: ["Photoshop", "Figma", "VS Code", "Excel"], ans: 1 },
+    { q: "What does UX stand for?", options: ["User Experience", "User Extension", "Universal XML", "None"], ans: 0 },
+    { q: "Wireframe is?", options: ["Final Design", "Low-fidelity sketch", "Color palette", "Logo"], ans: 1 },
+    { q: "Golden Rule of UI Design?", options: ["Keep it complex", "User control & freedom", "Too many colors", "No feedback"], ans: 1 },
+    { q: "Figma is?", options: ["Cloud-based", "Desktop only", "Mobile app", "None"], ans: 0 },
+    { q: "User Persona includes?", options: ["Name, Age, Goals, Pain points", "Only photo", "Only salary", "None"], ans: 0 },
+    { q: "Which has auto-layout feature?", options: ["Sketch", "Adobe XD", "Figma", "All"], ans: 3 },
+    { q: "Best practice for button color?", options: ["Same as background", "High contrast", "Gray only", "Random"], ans: 1 },
+    { q: "A/B Testing is for?", options: ["Comparing two designs", "Coding", "Database", "None"], ans: 0 },
+    { q: "Hick's Law says?", options: ["More choices = more time", "Less is more", "Color matters", "All"], ans: 0 }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (current >= questions.length) {
+        showResult();
+        return;
+    }
+    const q = questions[current];
+    const progress = ((current + 1) / questions.length) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+    document.getElementById("progressBar").textContent = Math.round(progress) + "%";
+
+    document.getElementById("questionsContainer").innerHTML = `
+        <div class="card shadow-lg border-0 mb-4">
+            <div class="card-body p-5 bg-light">
+                <h4 class="mb-4 text-dark"><strong>Q${current + 1}:</strong> ${q.q}</h4>
+                ${q.options.map((opt, i) => `
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="q" value="${i}" id="o${i}">
+                        <label class="form-check-label fs-5" for="o${i}">${opt}</label>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function nextQuestion() {
+    const selected = document.querySelector('input[name="q"]:checked');
+    if (!selected) { alert("Bhai ek option toh select kar!"); return; }
+    if (parseInt(selected.value) === questions[current].ans) score += 10;
+    current++;
+    loadQuestion();
+}
+
+function showResult() {
+    const msg = score >= 80 ? "Tu toh born designer hai!" : "Bahut badhiya shuruaat hai!";
+    document.getElementById("scoreDisplay").textContent = score + "/100";
+    document.getElementById("message").textContent = msg;
+    new bootstrap.Modal(document.getElementById("resultModal")).show();
+}
+
+loadQuestion();
+</script>
+{% endblock %}
