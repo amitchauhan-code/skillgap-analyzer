@@ -1,14 +1,20 @@
 ﻿from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
+import os
+from dotenv import load_dotenv
+
+# Load environment variables (Railway + local dono ke liye)
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'your-super-secret-key-change-this-later'
+app.secret_key = os.getenv('SECRET_KEY', 'your-super-secret-key-change-this-later')
 
-
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Chauhan@123'       
-app.config['MYSQL_DB'] = 'skillgap'
+# === RAILWAY + LOCAL COMPATIBLE MYSQL CONFIG ===
+app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST', 'monorail.proxy.rlwy.net')
+app.config['MYSQL_USER'] = os.getenv('MYSQL_USER', 'root')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', 'Chauhan@123')  # Railway pe override hoga
+app.config['MYSQL_DB'] = os.getenv('MYSQL_DB', 'railway')
+app.config['MYSQL_PORT'] = int(os.getenv('MYSQL_PORT', 3306))
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -32,7 +38,7 @@ def signup():
             cur.close()
             flash('Account created successfully! Now login.', 'success')
             return redirect(url_for('login'))
-        except:
+        except Exception as e:
             flash('Username or Email already exists!', 'danger')
     return render_template('signup.html')
 
@@ -67,7 +73,7 @@ def evaluate():
         return redirect(url_for('login'))
     return render_template('evaluate.html', username=session['username'])
 
-# ==================== QUIZ ROUTES ====================
+# Quiz Routes
 @app.route('/quiz/web')
 def quiz_web():
     if 'loggedin' not in session:
@@ -86,20 +92,14 @@ def quiz_uiux():
         return redirect(url_for('login'))
     return render_template('quiz_uiux.html', username=session['username'])
 
-# ==================== ANALYSIS & COURSES ====================
+# Analysis & Courses
 @app.route('/analysis')
 def analysis():
     if 'loggedin' not in session:
         return redirect(url_for('login'))
-    # Ye baad mein quiz se real score se aayega – abhi dummy data
     skills = {
-        'HTML': 90,
-        'CSS': 85,
-        'JavaScript': 65,
-        'Python': 45,
-        'React': 30,
-        'Bootstrap': 75,
-        'Git': 55
+        'HTML': 90, 'CSS': 85, 'JavaScript': 65, 'Python': 45,
+        'React': 30, 'Bootstrap': 75, 'Git': 55
     }
     return render_template('analysis.html', skills=skills, username=session['username'])
 
@@ -118,7 +118,6 @@ def courses():
     ]
     return render_template('courses.html', courses=recommended, username=session['username'])
 
-# ==================== LOGOUT & OTHERS ====================
 @app.route('/logout')
 def logout():
     session.clear()
@@ -134,4 +133,5 @@ def contact():
     return render_template('contact.html')
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    # Railway pe debug=False hoga, local pe True rahega
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=False)
